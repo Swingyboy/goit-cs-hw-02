@@ -10,14 +10,23 @@ if [ -f "$results_file" ]; then
 fi
 
 if [ ! -f "$filename" ]; then
+    echo "No input file was specified."
+    echo "Reading the URLs from the script"
     url_list=("https://www.google.com" "https://www.facebook.com")
 else
+    echo "Reading the URLs from the file $filename"
     readarray -t url_list < "$filename"
 fi
 
 # Print the URLs and check their status
 for url in "${url_list[@]}"; do
-    res=$(curl --request GET -sL --url "$url" -w "%{http_code}" -o /dev/null)
+
+    final_url=$(curl -s -L -o /dev/null -w "%{url_effective}" "$url")
+    if [ "$final_url" != "" ]; then
+        res=$(curl -s -L -o /dev/null -w "%{http_code}" "$url")
+    else
+        res=$(curl -s -o /dev/null -w "%{http_code}" "$final_url")
+    fi
     if [ "$res" -eq 200 ]; then
         echo "<$url> is UP" >> "$results_file"
     else
