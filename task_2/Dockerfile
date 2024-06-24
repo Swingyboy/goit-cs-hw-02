@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Set environment variables
-ENV PORT=5000
+ENV PORT=8080
 
 # Set working directory in the container
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Expose the port your app runs on
-EXPOSE 5000
+EXPOSE 8080
 
 # Command to run the application
 ENTRYPOINT ["python", "main.py"]
